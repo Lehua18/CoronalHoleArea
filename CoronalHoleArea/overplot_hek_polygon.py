@@ -72,6 +72,14 @@ for i, response in enumerate(responses):
         area = response['area_atdiskcenter']
         response_index = i
 
+
+# CSV STUFF (WORK HERE :))
+with open('example.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerows(data)
+
+print("CSV file 'example.csv' created successfully.")
+
 #*PRETTY SURE THIS IS ALL JUST DISPLAY STUFF, DON'T NEED FOR AREA*
 ##############################################################################
 # Next let's get the boundary of the coronal hole.
