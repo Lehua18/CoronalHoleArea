@@ -7,7 +7,7 @@ How to overplot HEK outlines on a map.
 """
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.use('Qt5Agg')  # Requires PyQt5 or PySide2 installed
+matplotlib.use('Agg')  # Requires PyQt5 or PySide2 installed
 
 import numpy as np
 
