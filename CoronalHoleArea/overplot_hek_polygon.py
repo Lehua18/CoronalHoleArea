@@ -80,7 +80,7 @@ for year in range(2010,2025):
                 percent = total / 6.09e12
 
                 data.append({'year': year, "month": month, "day": day, "percent":percent})
-
+    print(str(month)+"/"+str(year))
             #add total to array
 
 # CSV STUFF (WORK HERE :))
