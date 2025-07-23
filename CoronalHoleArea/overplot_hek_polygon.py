@@ -65,21 +65,22 @@ for year in range(2010,2025):
             #Failsafe
             if result:
                 files = Fido.fetch(result)
-                closest_file = min(files, key=lambda f: abs(Map(f).date - time))
-                aia_map = Map(closest_file)
-                client = hek.HEKClient()
-                results = client.search(a.Time(start, end), a.hek.EventType("CH"))
-                areaList = []
-                for event in results:
-                    areaList.append(float(str(event['area_atdiskcenter']).split(' ')[0]))
+                if files:
+                    closest_file = min(files, key=lambda f: abs(Map(f).date - time))
+                    aia_map = Map(closest_file)
+                    client = hek.HEKClient()
+                    results = client.search(a.Time(start, end), a.hek.EventType("CH"))
+                    areaList = []
+                    for event in results:
+                        areaList.append(float(str(event['area_atdiskcenter']).split(' ')[0]))
 
-                total = 0
-                for num in areaList:
-                    total += num
+                    total = 0
+                    for num in areaList:
+                        total += num
 
-                percent = total / 6.09e12
+                    percent = total / 6.09e12
 
-                data.append({'year': year, "month": month, "day": day, "percent":percent})
+                    data.append({'year': year, "month": month, "day": day, "percent":percent})
     print(str(month)+"/"+str(year))
             #add total to array
 
