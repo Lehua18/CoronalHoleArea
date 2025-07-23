@@ -27,58 +27,91 @@ import csv
 
 ###############################################################################
 #loop through day from 2010, export as csv, import to sunspot data grapher in java, ✨compare✨
-for day in day:
-    time = Time(input("Please enter a time in the form yyyy-MM-ddThh-mm: "))
-    start = (time - 30 * u.s).iso
-    end = (time + 30 * u.s).iso
-    result = Fido.search(
-        a.Time(start, end),
-        a.Instrument.aia,
-        a.Wavelength(193 * u.angstrom)
-    )
 
-    #Failsafe
-    if not result:
-        print("No matching images found.")
-        exit()
 
-    files = Fido.fetch(result)
-    closest_file = min(files, key=lambda f: abs(Map(f).date - time))
-    aia_map = Map(closest_file)
-    client = hek.HEKClient()
-    results = client.search(a.Time(start, end), a.hek.EventType("CH"))
-    areaList = []
-    for event in results:
-        areaList.append(float(event['area_atdiskcenter'].split(' ')[0]))
+def numDays(m, y):
+    if m == 2 and y%4 !=  0:
+        return 28
+    elif m == 2:
+        return 29
+    elif  m == 9 or m == 4 or m == 6 or m == 11:
+        return 30
+    else:
+        return 31
 
-    total = 0
-    for num in areaList:
-        total += num
+data = []
+
+for year in range(2010,2025):
+    for month in range(1,12):
+        for day in range(1, numDays(month, year)):
+            if month<10:
+                monthStr = "0"+str(month)
+            else:
+                monthStr = str(month)
+
+            if day < 10:
+                dayStr = "0" + str(day)
+            else:
+                monthStr = str(day)
+
+
+            # time = Time(input("Please enter a time in the form yyyy-MM-ddThh-mm: "))
+            time = str(year)+"-"+monthStr+"-"+dayStr+"T00:00"
+            time = Time(time)
+            start = (time - 30 * u.s).iso
+            end = (time + 30 * u.s).iso
+            result = Fido.search(a.Time(start, end), a.Instrument.aia, a.Wavelength(193 * u.angstrom))
+
+            #Failsafe
+            if result:
+                files = Fido.fetch(result)
+                closest_file = min(files, key=lambda f: abs(Map(f).date - time))
+                aia_map = Map(closest_file)
+                client = hek.HEKClient()
+                results = client.search(a.Time(start, end), a.hek.EventType("CH"))
+                areaList = []
+                for event in results:
+                    areaList.append(float(str(event['area_atdiskcenter']).split(' ')[0]))
+
+                total = 0
+                for num in areaList:
+                    total += num
+
+                percent = total / 6.09e12
+
+                data.append({'year': year, "month": month, "day": day, "percent":percent})
+
+            #add total to array
+
+# CSV STUFF (WORK HERE :))
+fieldnames = ['year', 'month', 'day', 'percent']
+
+with open('coronalhole.csv', 'w', newline='') as csvfile:
+     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+     writer.writeheader()  # Writes the header row
+     writer.writerows(data)
 ##############################################################################
 # Look for coronal holes detected using the SPoCA feature recognition method:
-
-    hek_client = hek.HEKClient()
-    start_time = aia_map.date - TimeDelta(2*u.hour)
-    end_time = aia_map.date + TimeDelta(2*u.hour)
-    responses = hek_client.search(a.Time(start_time, end_time), a.hek.CH, a.hek.FRM.Name == 'SPoCA')
+#
+#     hek_client = hek.HEKClient()
+#     start_time = aia_map.date - TimeDelta(2*u.hour)
+#     end_time = aia_map.date + TimeDelta(2*u.hour)
+#     responses = hek_client.search(a.Time(start_time, end_time), a.hek.CH, a.hek.FRM.Name == 'SPoCA')
 
 ##############################################################################
 # Let's find the biggest coronal hole within 80 degrees north/south of the
 # equator:
 
-area = 0.0
-for i, response in enumerate(responses):
-    if response['area_atdiskcenter'] > area and np.abs(response['hgc_y']) < 80.0:
-        area = response['area_atdiskcenter']
-        response_index = i
-
-
-# CSV STUFF (WORK HERE :))
-with open('example.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerows(data)
-
-print("CSV file 'example.csv' created successfully.")
+# area = 0.0
+# for i, response in enumerate(responses):
+#     if response['area_atdiskcenter'] > area and np.abs(response['hgc_y']) < 80.0:
+#         area = response['area_atdiskcenter']
+#         response_index = i
+#
+#
+#
+#
+# print("CSV file 'example.csv' created successfully.")
 
 #*PRETTY SURE THIS IS ALL JUST DISPLAY STUFF, DON'T NEED FOR AREA*
 ##############################################################################
