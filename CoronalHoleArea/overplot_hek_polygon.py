@@ -8,18 +8,16 @@ How to overplot HEK outlines on a map.
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')  # Requires PyQt5 or PySide2 installed
-
 import numpy as np
-
 import astropy.units as u
 from astropy.time import TimeDelta
-
 import sunpy.data.sample
 import sunpy.map
 from sunpy.net import attrs as a
 from sunpy.net import hek
 from sunpy.physics.differential_rotation import solar_rotate_coordinate
 from sunpy.net import Fido, attrs as a
+from parfive import Downloader
 from sunpy.map import Map
 from astropy.time import Time
 import csv
@@ -28,6 +26,7 @@ import csv
 ###############################################################################
 #loop through day from 2010, export as csv, import to sunspot data grapher in java, ✨compare✨
 
+downloader = Downloader(max_conn=1)  # Limit to 1 connection at a time
 
 def numDays(m, y):
     if m == 2 and y%4 !=  0:
@@ -64,7 +63,7 @@ for year in range(2010,2026):
 
             #Failsafe
             if result:
-                files = Fido.fetch(result)
+                files = Fido.fetch(result, downloader=downloader)
                 if files:
                     closest_file = min(files, key=lambda f: abs(Map(f).date - time))
                     aia_map = Map(closest_file)
