@@ -41,7 +41,7 @@ def numDays(m, y):
 
 data = []
 
-for year in range(2010,2026):
+for year in range(2010,2025):
     for month in range(1,13):
         for day in range(1, numDays(month, year)+1):
             if month<10:
