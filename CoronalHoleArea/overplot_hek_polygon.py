@@ -52,7 +52,7 @@ for year in range(2010,2025):
             if day < 10:
                 dayStr = "0" + str(day)
             else:
-                monthStr = str(day)
+                dayStr = str(day)
 
 
             # time = Time(input("Please enter a time in the form yyyy-MM-ddThh-mm: "))
@@ -80,9 +80,10 @@ for year in range(2010,2025):
 
                     percent = total / 6.09e12
 
+                    # add total to array
                     data.append({'year': year, "month": month, "day": day, "percent":percent})
     print(str(month)+"/"+str(year))
-            #add total to array
+
 
 # CSV STUFF (WORK HERE :))
 fieldnames = ['year', 'month', 'day', 'percent']
