@@ -64,6 +64,8 @@ for year in range(2010,2026):
             #Failsafe
             if result:
                 files = Fido.fetch(result, downloader=downloader)
+                if downloader.errors:
+                    print("Download errors:", downloader.errors)
                 if files:
                     closest_file = min(files, key=lambda f: abs(Map(f).date - time))
                     aia_map = Map(closest_file)
