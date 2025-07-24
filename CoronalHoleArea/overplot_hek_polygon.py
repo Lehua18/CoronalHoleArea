@@ -40,7 +40,7 @@ def numDays(m, y):
 
 data = []
 
-for year in range(2010,2025):
+for year in range(2010,2026):
     for month in range(1,13):
         for day in range(1, numDays(month, year)+1):
             if month<10:
@@ -64,8 +64,9 @@ for year in range(2010,2025):
             #Failsafe
             if result:
                 files = Fido.fetch(result, downloader=downloader)
-                if downloader.errors:
-                    print("Download errors:", downloader.errors)
+                if not files or len(files) == 0:
+                    print(f"Download failed for {time.iso}")
+                    continue
                 if files:
                     closest_file = min(files, key=lambda f: abs(Map(f).date - time))
                     aia_map = Map(closest_file)
