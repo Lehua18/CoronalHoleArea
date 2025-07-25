@@ -73,17 +73,20 @@ for year in range(2010,2011):
                     client = hek.HEKClient()
                     results = client.search(a.Time(start, end), a.hek.EventType("CH"))
                     areaList = []
-                    for event in results:
-                        areaList.append(float(str(event['area_atdiskcenter']).split(' ')[0]))
+                    try:
+                        for event in results:
+                            areaList.append(float(str(event['area_atdiskcenter']).split(' ')[0]))
 
-                    total = 0
-                    for num in areaList:
-                        total += num
+                        total = 0
+                        for num in areaList:
+                            total += num
 
-                    percent = total / 6.09e12
+                        percent = total / 6.09e12
 
                     # add total to array
-                    data.append({'year': year, "month": month, "day": day, "percent":percent})
+                        data.append({'year': year, "month": month, "day": day, "percent":percent})
+                    except:
+                        continue
     print(str(month)+"/"+str(year))
 
 
