@@ -40,7 +40,7 @@ def numDays(m, y):
 
 data = []
 
-for year in range(2010,2026):
+for year in range(2010,2011):
     for month in range(1,13):
         for day in range(1, numDays(month, year)+1):
             if month<10:
@@ -63,13 +63,13 @@ for year in range(2010,2026):
 
             #Failsafe
             if result:
-                files = Fido.fetch(result, downloader=downloader)
+                singleResult = result[0,0]
+                files = Fido.fetch(singleResult, downloader=downloader)
                 if not files or len(files) == 0:
                     print(f"Download failed for {time.iso}")
                     continue
                 if files:
-                    closest_file = min(files, key=lambda f: abs(Map(f).date - time))
-                    aia_map = Map(closest_file)
+                    aia_map = Map(files)
                     client = hek.HEKClient()
                     results = client.search(a.Time(start, end), a.hek.EventType("CH"))
                     areaList = []
