@@ -38,9 +38,10 @@ def numDays(m, y):
     else:
         return 31
 
+
 data = []
 
-for year in range(2012,2013):
+for year in range(2013,2014):
     for month in range(1,13):
         for day in range(1, numDays(month, year)+1):
             if month<10:
